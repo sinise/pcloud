@@ -28,18 +28,23 @@ cpu = float(cmdline("cat /proc/loadavg | cut -d' ' -f1"))
 eth0mac = cmdline("ip link show eth0 | awk '/ether/ {print $2}'")
 
 #get % of mem used
-memTotal = int(cmdline("cat /proc/meminfo | grep MemTotal | cut -d ' ' -f9"))
-memFree = int(cmdline("cat /proc/meminfo | grep MemFree | cut -d ' ' -f10"))
-memUsed = (memFree / memTotal) * 100
+memTotal = cmdline("cat /proc/meminfo | grep MemTotal")
+memTotal = memTotal[10:-3]
+memTotal = memTotal.strip()
+memFree = cmdline("cat /proc/meminfo | grep MemFree")
+memFree = memFree[8:-3]
+memFree = memFree.strip()
+memUsed = float(memFree) / (float(memTotal) / 100)
+memUsed = int(memUsed)
 
-url = 'http://10.0.0.26/rpi/recvStatusRpi_action/11:11:11:11:11:11'
+url = 'http://10.0.0.30/rpi/recvStatusRpi_action/11:11:11:11:11:11'
 user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
 values = {'ip' : ip,
           'mac' : eth0mac,
           'wan' : '10.0.0.2',   #should be removed from here and determined by server
-          'cpu' : cpu,
+          'cpu' : cpu,		#cpu load (avarge number of ready processes in queue over 1 min)
           'ram' : memUsed,      #memory used in percent
-          'url' : 'cloudscreen.dk',
+          'url' : 'dr.dk',
           'urlViaServer' : '0',
           'orientation' : '0',
           'lastMTransTime' : '' }
