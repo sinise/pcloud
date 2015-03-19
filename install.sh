@@ -26,8 +26,6 @@ echo "options 8192cu rtw_power_mgnt=0 rtw_enusbss=0" >> /etc/modprobe.d/8192cu.c
 cp config.txt /boot/config.txt
 chmod 666 /boot/config.txt
 
-#make shure the screen does not dim
-cp config /etc/kbd/config
 
 #disabale login 
 #to make outologin to shell open /etc/inittab and replace line
@@ -50,6 +48,10 @@ cp chromium.sh /etc/init.d/
 chmod 777 /etc/init.d/chromium.sh
 update-rc.d chromium.sh defaults
 echo "done"
+
+#set .xinitrx and .xserverrc
+cp .xinitrc /home/pi/
+cp .xserverrc /home/pi/
 
 #setup cron job
 #append the cronjobs to the tmpcron file

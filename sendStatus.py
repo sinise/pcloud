@@ -90,7 +90,6 @@ if not(config["mac"] == False):
         replace("/boot/config.txt", "display_rotate=", 'display_rotate=' + orientation)
 
         #set url
-        replace("/etc/init.d/chromium.sh", "url=", 'url="' + url + '"')
-        cmdline("chmod 777 /etc/init.d/chromium.sh")
+        replace("/home/pi/.xinitrc", "url=", 'url="' + url + '"')
         print "newconfig added now it should reboot"
         cmdline("sudo reboot")
