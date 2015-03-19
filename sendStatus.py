@@ -31,7 +31,7 @@ def cmdline(command):
         shell=True
     )
     return process.communicate()[0]
-
+print "sendStatus started"
 # Get the ip of the rpi
 eth0 = cmdline("ip addr list eth0 |grep 'inet ' |cut -d' ' -f6|cut -d/ -f1")
 wlan0 = cmdline("ip addr list wlan0 |grep 'inet ' |cut -d' ' -f6|cut -d/ -f1")
@@ -55,7 +55,7 @@ memTotal = memTotal.strip()
 memFree = cmdline("cat /proc/meminfo | grep MemFree")
 memFree = memFree[8:-3]
 memFree = memFree.strip()
-memUsed = float(memFree) / (float(memTotal) / 100)
+memUsed = (float(memTotal) - float(memFree)) / (float(memTotal) / 100)
 memUsed = int(memUsed)
 
 url = 'http://10.0.0.30/rpi/recvStatusRpi_action/' + eth0mac
@@ -77,19 +77,13 @@ response = urllib2.urlopen(req)
 config = response.read()
 #print config
 config = json.loads(config)
-print config["mac"]
 
 if not(config["mac"] == False):
-    print "there was a new config"
     mac = (config["mac"]["mac"]).replace("\n", "")
     command = (config["mac"]["command"])
     url = (config["mac"]["url"])
     orientation = (config["mac"]["orientation"])
-    print mac
-    print eth0mac
-    print (mac == eth0mac)
     if (mac == eth0mac):
-        print "macs are equal"
         if (command):
             cmdline(command)
         #set orientation
@@ -97,8 +91,6 @@ if not(config["mac"] == False):
 
         #set url
         replace("/etc/init.d/chromium.sh", "url=", 'url="' + url + '"')
-        cmdline("sudo chmod 777 /etc/init.d/chromium.sh")
-    cmdline("sudo reboot")
-else:
-    print "no new config"
-
+        cmdline("chmod 777 /etc/init.d/chromium.sh")
+        print "newconfig added now it should reboot"
+        cmdline("sudo reboot")

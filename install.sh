@@ -29,6 +29,10 @@
 #copy rasp settings
 #cp config.txt /boot/config.txt
 chmod 666 /boot/config.txt
+
+#make shure the screen does not dim
+cp config /etc/kbd/config
+
 #Register chromium as a service
 echo "add chromium as service"
 #cp chromium.sh /etc/init.d/
