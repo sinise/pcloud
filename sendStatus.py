@@ -1,6 +1,27 @@
+import json
 import urllib
 import urllib2
 from subprocess import PIPE, Popen
+
+from tempfile import mkstemp
+from shutil import move
+from os import remove, close
+
+def replace(file_path, pattern, newLine):
+    #Create temp file
+    fh, abs_path = mkstemp()
+    with open(abs_path,'w') as new_file:
+        with open(file_path) as old_file:
+            for line in old_file:
+                if (pattern in line):
+                    new_file.write(newLine + "\n")
+                else:
+                    new_file.write(line)
+    close(fh)
+    #Remove original file
+    remove(file_path)
+    #Move new file
+    move(abs_path, file_path)
 
 #execute commandd
 def cmdline(command):
@@ -25,7 +46,7 @@ cpu = float(cmdline("cat /proc/loadavg | cut -d' ' -f1"))
 
 #get the mac of the rpi (always use eth0 mac as identification
 # regardless if the connection is ower wify)
-eth0mac = cmdline("ip link show eth0 | awk '/ether/ {print $2}'")
+eth0mac = cmdline("ip link show eth0 | awk '/ether/ {print $2}'").replace("\n", "")
 
 #get % of mem used
 memTotal = cmdline("cat /proc/meminfo | grep MemTotal")
@@ -53,5 +74,31 @@ headers = { 'User-Agent' : user_agent }
 data = urllib.urlencode(values)
 req = urllib2.Request(url, data, headers)
 response = urllib2.urlopen(req)
-the_page = response.read()
-print the_page
+config = response.read()
+#print config
+config = json.loads(config)
+print config["mac"]
+
+if not(config["mac"] == False):
+    print "there was a new config"
+    mac = (config["mac"]["mac"]).replace("\n", "")
+    command = (config["mac"]["command"])
+    url = (config["mac"]["url"])
+    orientation = (config["mac"]["orientation"])
+    print mac
+    print eth0mac
+    print (mac == eth0mac)
+    if (mac == eth0mac):
+        print "macs are equal"
+        if (command):
+            cmdline(command)
+        #set orientation
+        replace("/boot/config.txt", "display_rotate=", 'display_rotate=' + orientation)
+
+        #set url
+        replace("/etc/init.d/chromium.sh", "url=", 'url="' + url + '"')
+        cmdline("sudo chmod 777 /etc/init.d/chromium.sh")
+    cmdline("sudo reboot")
+else:
+    print "no new config"
+

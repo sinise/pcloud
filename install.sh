@@ -26,10 +26,13 @@
 #echo "# Disable power management" >> /etc/modprobe.d/8192cu.conf
 #echo "options 8192cu rtw_power_mgnt=0 rtw_enusbss=0" >> /etc/modprobe.d/8192cu.conf
 
+#copy rasp settings
+#cp config.txt /boot/config.txt
+chmod 666 /boot/config.txt
 #Register chromium as a service
 echo "add chromium as service"
 #cp chromium.sh /etc/init.d/
-#chmod 755 /etc/init.d/chromium.sh
+chmod 777 /etc/init.d/chromium.sh
 #update-rc.d filename defaults
 echo "done"
 
