@@ -40,7 +40,7 @@ cp inittab /etc/inittab
 echo "add chromium as service"
 cp chromium.sh /etc/init.d/
 chmod 777 /etc/init.d/chromium.sh
-update-rc.d filename defaults
+update-rc.d chromium.sh defaults
 echo "done"
 
 #setup cron job
