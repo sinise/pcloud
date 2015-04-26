@@ -62,7 +62,6 @@ url = 'http://10.0.0.30/rpi/recvStatusRpi_action/' + eth0mac
 user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
 values = {'ip' : ip,
           'mac' : eth0mac,
-          'wan' : '10.0.0.2',   #should be removed from here and determined by server
           'cpu' : cpu,		#cpu load (avarge number of ready processes in queue over 1 min)
           'ram' : memUsed,      #memory used in percent
           'url' : 'http://dr.dk',

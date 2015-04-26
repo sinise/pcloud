@@ -35,7 +35,6 @@ chmod 666 /boot/config.txt
 cp inittab /etc/inittab
 
 #write log and other stuff to ramdisk
-#write log and other stuff to ram
 echo "tmpfs    /tmp    tmpfs    defaults,noatime,nosuid,size=5m    0 0" >> /etc/fstab
 echo "tmpfs    /var/tmp    tmpfs    defaults,noatime,nosuid,size=5m    0 0" >> /etc/fstab
 echo "tmpfs    /var/log    tmpfs    defaults,noatime,nosuid,mode=0755,size=5m    0 0" >> /etc/fstab
