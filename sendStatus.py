@@ -93,4 +93,3 @@ if not(config["mac"] == False):
         replace("/home/pi/.xinitrc", "url=", 'url="' + url + '"')
         print "newconfig added now it should reboot"
         cmdline("sudo reboot")
-
